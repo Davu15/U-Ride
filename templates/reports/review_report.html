@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+
+{% block title %}Revisar Reporte - U-Ride{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-header bg-warning text-dark">
+                <h5 class="mb-0">
+                    <i class="fas fa-clipboard-check"></i> Revisar Reporte
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <h6>Reportador</h6>
+                        <p>
+                            <strong>{{ reporte.reportador.get_full_name }}</strong><br>
+                            <small class="text-muted">{{ reporte.reportador.correo_institucional }}</small>
+                        </p>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>Reportado</h6>
+                        <p>
+                            <strong>{{ reporte.reportado.get_full_name }}</strong><br>
+                            <small class="text-muted">{{ reporte.reportado.correo_institucional }}</small>
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="mb-4">
+                    <h6>Información del Reporte</h6>
+                    <p>
+                        <strong>Motivo:</strong> {{ reporte.motivo }}<br>
+                        <strong>Fecha:</strong> {{ reporte.fecha_reporte|date:"d/m/Y H:i" }}<br>
+                        <strong>Estado:</strong> <span class="badge bg-info">{{ reporte.estado }}</span>
+                    </p>
+                </div>
+                
+                <div class="mb-4">
+                    <h6>Descripción del Incidente</h6>
+                    <p>{{ reporte.descripcion }}</p>
+                </div>
+                
+                {% if reporte.viaje %}
+                    <div class="alert alert-info">
+                        <strong>Viaje Relacionado:</strong> {{ reporte.viaje.zona_origen }} → {{ reporte.viaje.zona_destino }}<br>
+                        <strong>Fecha:</strong> {{ reporte.viaje.fecha_hora_salida|date:"d/m/Y H:i" }}
+                    </div>
+                {% endif %}
+                
+                <hr>
+                
+                <h6>Acción a Tomar</h6>
+                <form method="POST">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label for="accion" class="form-label">Selecciona una acción</label>
+                        <select class="form-select" id="accion" name="accion" required>
+                            <option value="">-- Selecciona --</option>
+                            <option value="advertencia">Advertencia (Sin Suspensión)</option>
+                            <option value="suspender">Suspender Temporalmente</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3" id="dias-container" style="display:none;">
+                        <label for="dias_suspension" class="form-label">Días de Suspensión</label>
+                        <input type="number" class="form-control" id="dias_suspension" name="dias_suspension" 
+                               min="1" max="365" value="7">
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="descripcion" class="form-label">Descripción de la Acción</label>
+                        <textarea class="form-control" id="descripcion" name="descripcion" rows="3" 
+                                  placeholder="Especifica la acción tomada y el motivo..." required></textarea>
+                    </div>
+                    
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a href="{% url 'reports:admin_dashboard' %}" class="btn btn-secondary">
+                            <i class="fas fa-times"></i> Cancelar
+                        </a>
+                        <button type="submit" class="btn btn-warning">
+                            <i class="fas fa-check"></i> Aplicar Acción
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('accion').addEventListener('change', function() {
+        const diasContainer = document.getElementById('dias-container');
+        if (this.value === 'suspender') {
+            diasContainer.style.display = 'block';
+        } else {
+            diasContainer.style.display = 'none';
+        }
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+
+{% block title %}Reportar Usuario - U-Ride{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-7">
+        <div class="card">
+            <div class="card-header bg-danger text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-flag"></i> Reportar Conducta Indebida
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-warning">
+                    <i class="fas fa-info-circle"></i> 
+                    Los reportes falsos pueden resultar en sanciones. Por favor, sé honesto y específico.
+                </div>
+                
+                <form method="POST">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label for="usuario_reportado" class="form-label">Usuario a Reportar</label>
+                        {% if usuario_a_reportar %}
+                            <input type="hidden" name="usuario_reportado" value="{{ usuario_a_reportar.id }}">
+                            <div class="alert alert-info">
+                                <strong>{{ usuario_a_reportar.get_full_name }}</strong> ({{ usuario_a_reportar.correo_institucional }})
+                            </div>
+                        {% else %}
+                            <select class="form-select" id="usuario_reportado" name="usuario_reportado" required>
+                                <option value="">Selecciona un usuario</option>
+                                {% for solicitud in viaje.solicitudes_pasajeros.all %}
+                                    <option value="{{ solicitud.pasajero.id }}">
+                                        {{ solicitud.pasajero.get_full_name }} ({{ solicitud.pasajero.correo_institucional }})
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="motivo" class="form-label">Motivo del Reporte</label>
+                        <select class="form-select" id="motivo" name="motivo" required>
+                            <option value="">Selecciona un motivo</option>
+                            <option value="Conducta agresiva">Conducta agresiva</option>
+                            <option value="Incumplimiento de reglas">Incumplimiento de reglas</option>
+                            <option value="Mala condición del vehículo">Mala condición del vehículo</option>
+                            <option value="Abuso o acoso">Abuso o acoso</option>
+                            <option value="Daños a vehículo">Daños a vehículo</option>
+                            <option value="Llegada tardía">Llegada tardía</option>
+                            <option value="No presentarse">No presentarse</option>
+                            <option value="Otro">Otro</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="descripcion" class="form-label">Descripción Detallada</label>
+                        <textarea class="form-control" id="descripcion" name="descripcion" rows="5" 
+                                  placeholder="Describe detalladamente lo que sucedió..." required></textarea>
+                        <small class="form-text text-muted">
+                            Sé específico. Incluye fecha, hora, lugar y detalles relevantes.
+                        </small>
+                    </div>
+                    
+                    <div class="alert alert-info">
+                        <strong>Viaje:</strong> {{ viaje.zona_origen }} → {{ viaje.zona_destino }}<br>
+                        <strong>Fecha:</strong> {{ viaje.fecha_hora_salida|date:"d/m/Y H:i" }}
+                    </div>
+                    
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a href="{% url 'trips:trip_detail' viaje.id %}" class="btn btn-secondary">
+                            <i class="fas fa-times"></i> Cancelar
+                        </a>
+                        <button type="submit" class="btn btn-danger">
+                            <i class="fas fa-flag"></i> Enviar Reporte
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,127 @@
+{% extends 'base.html' %}
+
+{% block title %}Calificar Viaje - U-Ride{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-header bg-warning text-dark">
+                <h5 class="mb-0">
+                    <i class="fas fa-star"></i> Calificar Viaje
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-info">
+                    <strong>Viaje:</strong> {{ viaje.zona_origen }} → {{ viaje.zona_destino }}<br>
+                    <strong>Fecha:</strong> {{ viaje.fecha_hora_salida|date:"d/m/Y H:i" }}
+                </div>
+                
+                <form method="POST">
+                    {% csrf_token %}
+                    
+                    {% if es_conductor %}
+                        <h6 class="mb-3">Califica a tus pasajeros</h6>
+                        
+                        {% if pasajeros_confirmados %}
+                            {% for solicitud in pasajeros_confirmados %}
+                                <div class="card mb-3 border-light">
+                                    <div class="card-body">
+                                        <div class="row align-items-center">
+                                            <div class="col-md-3">
+                                                {% if solicitud.pasajero.foto_perfil %}
+                                                    <img src="{{ solicitud.pasajero.foto_perfil.url }}" alt="Foto" class="img-fluid rounded">
+                                                {% else %}
+                                                    <div class="bg-light rounded d-flex align-items-center justify-content-center">
+                                                        <i class="fas fa-user fa-2x text-muted"></i>
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+                                            <div class="col-md-9">
+                                                <h6>{{ solicitud.pasajero.get_full_name }}</h6>
+                                                <p class="text-muted mb-3">{{ solicitud.pasajero.correo_institucional }}</p>
+                                                
+                                                <div class="mb-2">
+                                                    <label class="form-label">Calificación</label>
+                                                    <select class="form-select" name="pasajero_{{ solicitud.pasajero.id }}" required>
+                                                        <option value="">Selecciona una calificación</option>
+                                                        <option value="5">⭐⭐⭐⭐⭐ Excelente</option>
+                                                        <option value="4">⭐⭐⭐⭐ Muy Bueno</option>
+                                                        <option value="3">⭐⭐⭐ Bueno</option>
+                                                        <option value="2">⭐⭐ Aceptable</option>
+                                                        <option value="1">⭐ Deficiente</option>
+                                                    </select>
+                                                </div>
+                                                
+                                                <div class="mb-2">
+                                                    <label class="form-label">Reseña (Opcional)</label>
+                                                    <textarea class="form-control" name="resena_{{ solicitud.pasajero.id }}" 
+                                                              rows="2" placeholder="Comparte tu experiencia..."></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            <div class="alert alert-warning">
+                                No hay pasajeros confirmados para este viaje.
+                            </div>
+                        {% endif %}
+                    
+                    {% else %}
+                        <h6 class="mb-3">Califica a tu conductor</h6>
+                        
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <div class="row align-items-center">
+                                    <div class="col-md-3">
+                                        {% if viaje.conductor.foto_perfil %}
+                                            <img src="{{ viaje.conductor.foto_perfil.url }}" alt="Foto" class="img-fluid rounded">
+                                        {% else %}
+                                            <div class="bg-light rounded d-flex align-items-center justify-content-center" style="height: 100px;">
+                                                <i class="fas fa-user fa-2x text-muted"></i>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="col-md-9">
+                                        <h6>{{ viaje.conductor.get_full_name }}</h6>
+                                        <p class="text-muted mb-3">{{ viaje.conductor.correo_institucional }}</p>
+                                        
+                                        <div class="mb-2">
+                                            <label class="form-label">Calificación</label>
+                                            <select class="form-select" name="puntuacion_conductor" required>
+                                                <option value="">Selecciona una calificación</option>
+                                                <option value="5">⭐⭐⭐⭐⭐ Excelente</option>
+                                                <option value="4">⭐⭐⭐⭐ Muy Bueno</option>
+                                                <option value="3">⭐⭐⭐ Bueno</option>
+                                                <option value="2">⭐⭐ Aceptable</option>
+                                                <option value="1">⭐ Deficiente</option>
+                                            </select>
+                                        </div>
+                                        
+                                        <div class="mb-2">
+                                            <label class="form-label">Reseña (Opcional)</label>
+                                            <textarea class="form-control" name="resena_conductor" 
+                                                      rows="3" placeholder="Comparte tu experiencia..."></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                    
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a href="{% url 'trips:trip_detail' viaje.id %}" class="btn btn-secondary">
+                            <i class="fas fa-times"></i> Cancelar
+                        </a>
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-check"></i> Enviar Calificación
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

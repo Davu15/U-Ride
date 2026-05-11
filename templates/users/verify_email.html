@@ -1,0 +1,144 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Verificar Correo - U-Ride{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center align-items-center" style="min-height: 100vh;">
+        <div class="col-md-6 col-lg-5">
+            
+            <!-- Header -->
+            <div class="text-center mb-5">
+                <h1 class="h2 mb-2">
+                    <i class="fas fa-envelope-open-text text-success"></i> Verificar Correo
+                </h1>
+                <p class="text-muted">Ingresa el código que recibiste por email</p>
+            </div>
+
+            <!-- Mensajes -->
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                        <i class="fas fa-exclamation-circle me-2"></i>
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <!-- Formulario de Verificación -->
+            <form method="POST" class="needs-validation" novalidate>
+                {% csrf_token %}
+
+                <!-- Correo (readonly) -->
+                <div class="mb-4">
+                    <label for="{{ form.correo_institucional.id_for_label }}" class="form-label fw-semibold">
+                        <i class="fas fa-envelope text-success"></i> Correo Institucional
+                    </label>
+                    
+                    <input 
+                        type="email"
+                        class="form-control"
+                        id="{{ form.correo_institucional.id_for_label }}"
+                        name="{{ form.correo_institucional.name }}"
+                        value="{{ form.correo_institucional.value|default:correo_registrado }}"
+                        required
+                    >
+                    
+                    <small class="form-text text-muted d-block mt-2">
+                        El correo al que enviamos el código
+                    </small>
+                </div>
+
+                <!-- Código de Verificación -->
+                <div class="mb-4">
+                    <label for="{{ form.codigo.id_for_label }}" class="form-label fw-semibold">
+                        <i class="fas fa-lock text-success"></i> Código de Verificación
+                    </label>
+                    
+                    <input 
+                        type="text"
+                        class="form-control text-center {% if form.codigo.errors %}is-invalid{% endif %}"
+                        id="{{ form.codigo.id_for_label }}"
+                        name="{{ form.codigo.name }}"
+                        placeholder="000000"
+                        maxlength="6"
+                        inputmode="numeric"
+                        required
+                        style="font-size: 1.5rem; letter-spacing: 0.5rem;"
+                    >
+                    
+                    <small class="form-text text-muted d-block mt-2">
+                        Ingresa el código de 6 dígitos
+                    </small>
+                    
+                    {% if form.codigo.errors %}
+                        <div class="invalid-feedback d-block mt-2">
+                            <i class="fas fa-times-circle"></i>
+                            {% for error in form.codigo.errors %}
+                                <div>{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Botón Submit -->
+                <button type="submit" class="btn btn-success btn-lg w-100 mb-3 fw-semibold">
+                    <i class="fas fa-check-circle me-2"></i> Verificar Código
+                </button>
+
+            </form>
+
+            <!-- Divider -->
+            <div class="text-center my-4">
+                <hr>
+                <small class="text-muted">¿No recibiste el código?</small>
+            </div>
+
+            <!-- Reenviar Código -->
+            <form method="POST" action="{% url 'users:reenviar_codigo' %}" class="mb-3">
+                {% csrf_token %}
+                <input type="hidden" name="correo_institucional" value="{{ form.correo_institucional.value|default:correo_registrado }}">
+                <button type="submit" class="btn btn-outline-secondary w-100 fw-semibold">
+                    <i class="fas fa-redo me-2"></i> Reenviar Código
+                </button>
+            </form>
+
+            <!-- Info -->
+            <div class="alert alert-info small" role="alert">
+                <i class="fas fa-info-circle me-2"></i>
+                El código fue enviado a <strong>{{ form.correo_institucional.value|default:correo_registrado }}</strong>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<style>
+    .form-label {
+        color: #2c3e50;
+        font-size: 0.95rem;
+    }
+    
+    .form-control:focus {
+        border-color: #2ecc71;
+        box-shadow: 0 0 0 0.2rem rgba(46, 204, 113, 0.25);
+    }
+    
+    .btn-success {
+        background-color: #2ecc71;
+        border-color: #2ecc71;
+    }
+    
+    .btn-success:hover {
+        background-color: #27ae60;
+        border-color: #27ae60;
+    }
+    
+    .is-invalid {
+        border-color: #e74c3c !important;
+    }
+</style>
+
+{% endblock %}

@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+
+{% block title %}Gestionar Usuarios - U-Ride{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">
+    <i class="fas fa-users"></i> Gestión de Usuarios
+</h2>
+
+<div class="card mb-4">
+    <div class="card-body">
+        <div class="btn-group" role="group">
+            <a href="?filtro=" class="btn btn-outline-primary {% if filtro == '' %}active{% endif %}">
+                Todos
+            </a>
+            <a href="?filtro=advertencias" class="btn btn-outline-warning {% if filtro == 'advertencias' %}active{% endif %}">
+                <i class="fas fa-exclamation-triangle"></i> Con Advertencias
+            </a>
+            <a href="?filtro=suspendidos" class="btn btn-outline-danger {% if filtro == 'suspendidos' %}active{% endif %}">
+                <i class="fas fa-ban"></i> Suspendidos
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="table-responsive">
+    <table class="table table-hover">
+        <thead class="table-light">
+            <tr>
+                <th>Nombre</th>
+                <th>Correo</th>
+                <th>Reputación</th>
+                <th>Viajes</th>
+                <th>Advertencias</th>
+                <th>Suspendido Hasta</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for usuario in usuarios %}
+                <tr>
+                    <td>
+                        <strong>{{ usuario.get_full_name }}</strong>
+                    </td>
+                    <td>{{ usuario.correo_institucional }}</td>
+                    <td>
+                        <span class="star-rating">
+                            {% for i in "12345" %}
+                                {% if i|add:"0" <= usuario.reputacion %}
+                                    <i class="fas fa-star"></i>
+                                {% else %}
+                                    <i class="far fa-star"></i>
+                                {% endif %}
+                            {% endfor %}
+                        </span>
+                        ({{ usuario.reputacion }}/5)
+                    </td>
+                    <td>{{ usuario.cantidad_viajes }}</td>
+                    <td>
+                        {% if usuario.advertencias > 0 %}
+                            <span class="badge bg-warning">{{ usuario.advertencias }}</span>
+                        {% else %}
+                            <span class="text-muted">-</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if usuario.suspendido_hasta %}
+                            <span class="badge bg-danger">{{ usuario.suspendido_hasta|date:"d/m/Y" }}</span>
+                        {% else %}
+                            <span class="text-muted">-</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="/admin/users/usuario/{{ usuario.id }}/change/" class="btn btn-sm btn-info" target="_blank">
+                            <i class="fas fa-edit"></i> Editar
+                        </a>
+                    </td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="7" class="text-center text-muted">No hay usuarios con estos criterios</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

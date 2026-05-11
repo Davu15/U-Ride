@@ -1,0 +1,218 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Mi Perfil - U-Ride{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    
+    <!-- Header -->
+    <div class="mb-5">
+        <h1 class="h2 mb-2">
+            <i class="fas fa-user-circle text-success"></i> Mi Perfil
+        </h1>
+    </div>
+
+    <div class="row">
+        
+        <!-- Información Principal -->
+        <div class="col-lg-8 mb-4">
+            <div class="card shadow">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">Información Personal</h5>
+                </div>
+                <div class="card-body">
+                    
+                    <div class="row mb-4">
+                        <!-- Foto -->
+                        <div class="col-md-3 text-center mb-3">
+                            {% if user.foto_perfil %}
+                                <img src="{{ user.foto_perfil.url }}" alt="Foto perfil" class="img-fluid rounded-circle" style="max-width: 150px; object-fit: cover;">
+                            {% else %}
+                                <div class="bg-light rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 150px; height: 150px;">
+                                    <i class="fas fa-user fa-5x text-muted"></i>
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Datos Básicos -->
+                        <div class="col-md-9">
+                            <h3 class="mb-2">{{ user.get_full_name|default:"Usuario" }}</h3>
+                            
+                            <p class="mb-2">
+                                <i class="fas fa-envelope text-success"></i> 
+                                <strong>{{ user.correo_institucional }}</strong>
+                            </p>
+                            
+                            <!-- Badges -->
+                            <div class="mb-3">
+                                {% if user.verificado %}
+                                    <span class="badge bg-success">
+                                        <i class="fas fa-check-circle"></i> Verificado
+                                    </span>
+                                {% else %}
+                                    <span class="badge bg-warning">
+                                        <i class="fas fa-exclamation-circle"></i> No Verificado
+                                    </span>
+                                {% endif %}
+                                
+                                {% if user.esta_suspendido %}
+                                    <span class="badge bg-danger">
+                                        <i class="fas fa-ban"></i> Suspendido
+                                    </span>
+                                {% else %}
+                                    <span class="badge bg-info">
+                                        <i class="fas fa-shield-alt"></i> Activo
+                                    </span>
+                                {% endif %}
+                            </div>
+                            
+                            <!-- Reputación -->
+                            <p class="mb-3">
+                                <strong>Reputación:</strong>
+                                {% for i in "12345" %}
+                                    {% if i|add:"0" <= user.reputacion %}
+                                        <i class="fas fa-star text-warning"></i>
+                                    {% else %}
+                                        <i class="far fa-star text-muted"></i>
+                                    {% endif %}
+                                {% endfor %}
+                                <span class="ms-2">{{ user.reputacion }}/5.0</span>
+                            </p>
+                            
+                            <!-- Estadísticas -->
+                            <p class="mb-0">
+                                <i class="fas fa-road text-success"></i> 
+                                <strong>Viajes completados:</strong> {{ user.cantidad_viajes }}
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <!-- Información Adicional -->
+                    <hr>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p>
+                                <strong><i class="fas fa-graduation-cap"></i> Carrera:</strong><br>
+                                {{ user.carrera|default:"No especificada" }}
+                            </p>
+                        </div>
+                        <div class="col-md-6">
+                            <p>
+                                <strong><i class="fas fa-phone"></i> Teléfono:</strong><br>
+                                {{ user.numero_contacto|default:"No especificado" }}
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-12">
+                            <p>
+                                <strong><i class="fas fa-map-marker-alt"></i> Zona de Referencia:</strong><br>
+                                {{ user.zona_referencia|default:"No especificada" }}
+                            </p>
+                        </div>
+                    </div>
+                    
+                    {% if user.advertencias > 0 %}
+                        <div class="alert alert-warning mt-3 mb-0">
+                            <i class="fas fa-exclamation-triangle"></i> 
+                            <strong>Advertencias: {{ user.advertencias }}</strong>
+                        </div>
+                    {% endif %}
+                    
+                </div>
+            </div>
+            
+            <!-- Botón Editar -->
+            <div class="mt-3">
+                <a href="{% url 'users:edit_profile' %}" class="btn btn-outline-success">
+                    <i class="fas fa-edit"></i> Editar Perfil
+                </a>
+                <a href="{% url 'users:logout' %}" class="btn btn-outline-danger">
+                    <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+                </a>
+            </div>
+        </div>
+        
+        <!-- Sidebar -->
+        <div class="col-lg-4">
+            
+            <!-- Vehículos -->
+            <div class="card shadow mb-4">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-car"></i> Mis Vehículos
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% if user.vehiculos.all %}
+                        {% for vehiculo in user.vehiculos.all %}
+                            <div class="mb-3 p-3 border rounded">
+                                <h6 class="mb-2">{{ vehiculo.marca }} {{ vehiculo.modelo }}</h6>
+                                <small class="d-block">
+                                    <i class="fas fa-id-card"></i> <strong>{{ vehiculo.placa }}</strong>
+                                </small>
+                                <small class="d-block">
+                                    <i class="fas fa-calendar"></i> Año {{ vehiculo.ano }}
+                                </small>
+                                <small class="d-block">
+                                    <i class="fas fa-paint-brush"></i> {{ vehiculo.color }}
+                                </small>
+                                <small class="d-block">
+                                    <i class="fas fa-users"></i> {{ vehiculo.capacidad_asientos }} asientos
+                                </small>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <p class="text-muted mb-3">
+                            <i class="fas fa-info-circle"></i> No tienes vehículos registrados
+                        </p>
+                    {% endif %}
+                    
+                    <a href="{% url 'users:register_vehicle' %}" class="btn btn-info w-100">
+                        <i class="fas fa-plus-circle"></i> Registrar Vehículo
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Acciones Rápidas -->
+            <div class="card shadow">
+                <div class="card-header bg-secondary text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-lightning-bolt"></i> Acciones Rápidas
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted small mb-3">Gestiona tus viajes desde aquí</p>
+                    
+                    <a href="{% url 'users:profile' %}" class="btn btn-success w-100 mb-2">
+                        <i class="fas fa-road"></i> Publicar Viaje
+                    </a>
+                    <a href="{% url 'users:profile' %}" class="btn btn-primary w-100 mb-2">
+                        <i class="fas fa-search"></i> Buscar Viajes
+                    </a>
+                    <a href="{% url 'users:profile' %}" class="btn btn-warning w-100">
+                        <i class="fas fa-list"></i> Mis Viajes
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+    
+</div>
+
+<style>
+    .card {
+        border: none;
+        border-radius: 8px;
+    }
+    
+    .card-header {
+        border-radius: 8px 8px 0 0 !important;
+    }
+</style>
+
+{% endblock %}

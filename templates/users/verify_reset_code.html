@@ -1,0 +1,173 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Verificar Código - U-Ride{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center align-items-center" style="min-height: 100vh;">
+        <div class="col-md-6 col-lg-5">
+            
+            <!-- Header -->
+            <div class="text-center mb-5">
+                <h1 class="h2 mb-2">
+                    <i class="fas fa-check-circle text-success"></i> Verificar Código
+                </h1>
+                <p class="text-muted">Ingresa el código que recibiste por email</p>
+            </div>
+
+            <!-- Mensajes -->
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                        <i class="fas fa-exclamation-circle me-2"></i>
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <!-- Información del correo -->
+            <div class="alert alert-info" role="alert">
+                <i class="fas fa-envelope me-2"></i>
+                <strong>Correo:</strong> {{ correo_recuperacion }}
+            </div>
+
+            <!-- Formulario -->
+            <form method="POST" class="needs-validation" novalidate>
+                {% csrf_token %}
+
+                <!-- Código de Recuperación -->
+                <div class="mb-4">
+                    <label for="{{ form.codigo.id_for_label }}" class="form-label fw-semibold">
+                        <i class="fas fa-barcode text-success"></i> Código de Recuperación
+                    </label>
+                    
+                    <input 
+                        type="text"
+                        class="form-control form-control-lg text-center {% if form.codigo.errors %}is-invalid{% endif %}"
+                        id="{{ form.codigo.id_for_label }}"
+                        name="{{ form.codigo.name }}"
+                        placeholder="123456"
+                        maxlength="6"
+                        inputmode="numeric"
+                        value="{{ form.codigo.value|default:'' }}"
+                        required
+                        autofocus
+                    >
+                    
+                    {% if form.codigo.errors %}
+                        <div class="invalid-feedback d-block mt-2">
+                            <i class="fas fa-times-circle"></i>
+                            {% for error in form.codigo.errors %}
+                                <div>{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                    {% if form.codigo.help_text %}
+                        <small class="form-text text-muted d-block mt-2">
+                            <i class="fas fa-info-circle"></i> {{ form.codigo.help_text }}
+                        </small>
+                    {% endif %}
+                </div>
+
+                <!-- Campo oculto con el correo -->
+                <input 
+                    type="hidden"
+                    name="{{ form.correo_institucional.name }}"
+                    value="{{ correo_recuperacion }}"
+                >
+
+                <!-- Información -->
+                <div class="alert alert-warning" role="alert">
+                    <i class="fas fa-clock me-2"></i>
+                    <strong>Válido por:</strong> 24 horas. No compartas este código con nadie.
+                </div>
+
+                <!-- Botón Submit -->
+                <button type="submit" class="btn btn-success btn-lg w-100 mb-3 fw-semibold">
+                    <i class="fas fa-check me-2"></i> Verificar Código
+                </button>
+
+            </form>
+
+            <!-- Divider -->
+            <div class="text-center my-4">
+                <hr>
+                <small class="text-muted">¿No recibiste el código?</small>
+            </div>
+
+            <!-- Link a Resolicitar -->
+            <div class="text-center mb-3">
+                <a href="{% url 'users:forgot_password' %}" class="btn btn-outline-warning btn-sm fw-semibold">
+                    <i class="fas fa-redo me-2"></i> Solicitar Nuevo Código
+                </a>
+            </div>
+
+            <!-- Link a Login -->
+            <div class="text-center">
+                <a href="{% url 'users:login' %}" class="btn btn-outline-primary btn-sm fw-semibold">
+                    <i class="fas fa-arrow-left me-2"></i> Volver al Login
+                </a>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<style>
+    .form-label {
+        color: #2c3e50;
+        font-size: 0.95rem;
+    }
+    
+    .form-control:focus {
+        border-color: #2ecc71;
+        box-shadow: 0 0 0 0.2rem rgba(46, 204, 113, 0.25);
+    }
+    
+    .form-control-lg {
+        font-size: 1.5rem;
+        letter-spacing: 0.5rem;
+        font-weight: bold;
+    }
+    
+    .btn-success {
+        background-color: #2ecc71;
+        border-color: #2ecc71;
+    }
+    
+    .btn-success:hover {
+        background-color: #27ae60;
+        border-color: #27ae60;
+    }
+    
+    .btn-outline-warning {
+        color: #f39c12;
+        border-color: #f39c12;
+    }
+    
+    .btn-outline-warning:hover {
+        background-color: #f39c12;
+        border-color: #f39c12;
+        color: white;
+    }
+    
+    .btn-outline-primary {
+        color: #3498db;
+        border-color: #3498db;
+    }
+    
+    .btn-outline-primary:hover {
+        background-color: #3498db;
+        border-color: #3498db;
+        color: white;
+    }
+    
+    .is-invalid {
+        border-color: #e74c3c !important;
+    }
+</style>
+
+{% endblock %}

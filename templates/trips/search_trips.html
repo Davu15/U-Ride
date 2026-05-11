@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+
+{% block title %}Buscar Viajes - U-Ride{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-lg-12">
+        <h2 class="mb-4">
+            <i class="fas fa-search"></i> Buscar Viajes
+        </h2>
+        
+        <!-- Filtros -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <form method="GET" class="row g-3">
+                    <div class="col-md-3">
+                        <label for="zona_origen" class="form-label">Zona de Origen</label>
+                        <input type="text" class="form-control" id="zona_origen" name="zona_origen" 
+                               value="{{ zona_origen }}" placeholder="ej: Centro">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="zona_destino" class="form-label">Zona de Destino</label>
+                        <input type="text" class="form-control" id="zona_destino" name="zona_destino" 
+                               value="{{ zona_destino }}" placeholder="ej: Sur">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="fecha" class="form-label">Fecha</label>
+                        <input type="date" class="form-control" id="fecha" name="fecha" value="{{ fecha }}">
+                    </div>
+                    <div class="col-md-3 d-flex align-items-end">
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="fas fa-search"></i> Buscar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Viajes Encontrados -->
+<div class="row">
+    {% if viajes %}
+        {% for viaje in viajes %}
+            <div class="col-lg-6 mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <div class="row mb-3">
+                            <div class="col-8">
+                                <h5 class="card-title">
+                                    {{ viaje.zona_origen }} → {{ viaje.zona_destino }}
+                                </h5>
+                            </div>
+                            <div class="col-4 text-end">
+                                <span class="badge bg-info">{{ viaje.cupos_disponibles }} cupo{{ viaje.cupos_disponibles|pluralize }}</span>
+                            </div>
+                        </div>
+                        
+                        <p class="text-muted mb-2">
+                            <i class="fas fa-clock"></i> 
+                            {{ viaje.fecha_hora_salida|date:"d/m/Y H:i" }}
+                        </p>
+                        
+                        <p class="mb-2">
+                            <strong>Conductor:</strong> 
+                            <a href="#" class="text-decoration-none">
+                                {{ viaje.conductor.get_full_name }}
+                            </a>
+                            <span class="star-rating ms-2">
+                                {% for i in "12345" %}
+                                    {% if i|add:"0" <= viaje.conductor.reputacion %}
+                                        <i class="fas fa-star"></i>
+                                    {% else %}
+                                        <i class="far fa-star"></i>
+                                    {% endif %}
+                                {% endfor %}
+                            </span>
+                        </p>
+                        
+                        {% if viaje.vehiculo %}
+                            <p class="mb-3">
+                                <strong>Vehículo:</strong> {{ viaje.vehiculo.marca }} {{ viaje.vehiculo.modelo }} 
+                                <span class="text-muted">({{ viaje.vehiculo.placa }})</span>
+                            </p>
+                        {% endif %}
+                        
+                        {% if viaje.notas_reglas %}
+                            <div class="alert alert-warning mb-3">
+                                <strong>Reglas:</strong> {{ viaje.notas_reglas }}
+                            </div>
+                        {% endif %}
+                        
+                        <a href="{% url 'trips:trip_detail' viaje.id %}" class="btn btn-outline-primary w-100">
+                            <i class="fas fa-eye"></i> Ver Detalles
+                        </a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <div class="col-12">
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle"></i> No se encontraron viajes con los criterios especificados.
+            </div>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

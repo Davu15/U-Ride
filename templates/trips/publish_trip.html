@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+
+{% block title %}Publicar Viaje - U-Ride{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-plus"></i> Publicar Nuevo Viaje
+                </h5>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    {% csrf_token %}
+                    
+                    <h6 class="mb-3">Información del Viaje</h6>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="zona_origen" class="form-label">Zona de Origen</label>
+                            <input type="text" class="form-control" id="zona_origen" name="zona_origen" 
+                                   placeholder="ej: Centro" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="zona_destino" class="form-label">Zona de Destino</label>
+                            <input type="text" class="form-control" id="zona_destino" name="zona_destino" 
+                                   placeholder="ej: Sur" required>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="fecha_hora_salida" class="form-label">Fecha y Hora de Salida</label>
+                            <input type="datetime-local" class="form-control" id="fecha_hora_salida" 
+                                   name="fecha_hora_salida" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="cupos_totales" class="form-label">Cupos Disponibles</label>
+                            <input type="number" class="form-control" id="cupos_totales" name="cupos_totales" 
+                                   min="1" max="8" value="4" required>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="vehiculo" class="form-label">Vehículo</label>
+                        <select class="form-select" id="vehiculo" name="vehiculo">
+                            <option value="">Sin vehículo especificado</option>
+                            {% for v in vehiculos %}
+                                <option value="{{ v.id }}">{{ v.marca }} {{ v.modelo }} ({{ v.placa }})</option>
+                            {% endfor %}
+                        </select>
+                        {% if not vehiculos %}
+                            <small class="form-text text-warning">
+                                <i class="fas fa-exclamation-triangle"></i> 
+                                No tienes vehículos registrados. <a href="{% url 'users:register_vehicle' %}">Registra uno aquí</a>
+                            </small>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="notas_reglas" class="form-label">Reglas y Notas del Viaje</label>
+                        <textarea class="form-control" id="notas_reglas" name="notas_reglas" rows="4"
+                                  placeholder="ej: Se requiere puntualidad, no se permiten mascotas, etc."></textarea>
+                        <small class="form-text text-muted">Opcional: Especifica reglas especiales para este viaje</small>
+                    </div>
+                    
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a href="{% url 'trips:my_trips' %}" class="btn btn-secondary">
+                            <i class="fas fa-times"></i> Cancelar
+                        </a>
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-check"></i> Publicar Viaje
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

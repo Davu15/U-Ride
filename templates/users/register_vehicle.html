@@ -1,0 +1,186 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Registrar Vehículo - U-Ride{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    
+    <!-- Header -->
+    <div class="mb-5">
+        <h1 class="h2 mb-2">
+            <i class="fas fa-car-side text-success"></i> Registrar Vehículo
+        </h1>
+        <p class="text-muted">Agrega un nuevo vehículo a tu perfil</p>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-7">
+            
+            <!-- Mensajes -->
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                        <i class="fas fa-check-circle me-2"></i>
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <div class="card shadow">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">Información del Vehículo</h5>
+                </div>
+                <div class="card-body p-5">
+                    
+                    <form method="POST" class="needs-validation" novalidate>
+                        {% csrf_token %}
+
+                        <!-- Marca y Modelo -->
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <label for="marca" class="form-label fw-semibold">
+                                    <i class="fas fa-tag text-success"></i> Marca
+                                </label>
+                                <input 
+                                    type="text" 
+                                    class="form-control" 
+                                    id="marca" 
+                                    name="marca" 
+                                    placeholder="Toyota, Ford, Honda, etc."
+                                    required
+                                >
+                            </div>
+                            <div class="col-md-6">
+                                <label for="modelo" class="form-label fw-semibold">
+                                    <i class="fas fa-tag text-success"></i> Modelo
+                                </label>
+                                <input 
+                                    type="text" 
+                                    class="form-control" 
+                                    id="modelo" 
+                                    name="modelo" 
+                                    placeholder="Corolla, Fiesta, Civic, etc."
+                                    required
+                                >
+                            </div>
+                        </div>
+
+                        <!-- Año y Color -->
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <label for="ano" class="form-label fw-semibold">
+                                    <i class="fas fa-calendar text-success"></i> Año
+                                </label>
+                                <input 
+                                    type="number" 
+                                    class="form-control" 
+                                    id="ano" 
+                                    name="ano" 
+                                    placeholder="2023"
+                                    min="1990"
+                                    max="2099"
+                                    required
+                                >
+                            </div>
+                            <div class="col-md-6">
+                                <label for="color" class="form-label fw-semibold">
+                                    <i class="fas fa-paint-brush text-success"></i> Color
+                                </label>
+                                <input 
+                                    type="text" 
+                                    class="form-control" 
+                                    id="color" 
+                                    name="color" 
+                                    placeholder="Blanco, Negro, Azul, etc."
+                                    required
+                                >
+                            </div>
+                        </div>
+
+                        <!-- Placa y Capacidad -->
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <label for="placa" class="form-label fw-semibold">
+                                    <i class="fas fa-id-card text-success"></i> Placa
+                                </label>
+                                <input 
+                                    type="text" 
+                                    class="form-control text-uppercase" 
+                                    id="placa" 
+                                    name="placa" 
+                                    placeholder="ABC123"
+                                    maxlength="10"
+                                    required
+                                >
+                                <small class="form-text text-muted">Formato: ABC123 o ABC-123</small>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="capacidad_asientos" class="form-label fw-semibold">
+                                    <i class="fas fa-users text-success"></i> Capacidad (Asientos)
+                                </label>
+                                <input 
+                                    type="number" 
+                                    class="form-control" 
+                                    id="capacidad_asientos" 
+                                    name="capacidad_asientos" 
+                                    placeholder="5"
+                                    min="1"
+                                    max="9"
+                                    value="5"
+                                    required
+                                >
+                                <small class="form-text text-muted">Incluye al conductor</small>
+                            </div>
+                        </div>
+
+                        <!-- Info -->
+                        <div class="alert alert-info mb-4">
+                            <i class="fas fa-info-circle"></i>
+                            <strong>Importante:</strong> La placa debe ser única y verificable. Asegúrate de ingresar correctamente.
+                        </div>
+
+                        <!-- Botones -->
+                        <div class="d-flex gap-2 mt-5">
+                            <a href="{% url 'users:profile' %}" class="btn btn-outline-secondary btn-lg flex-grow-1">
+                                <i class="fas fa-times"></i> Cancelar
+                            </a>
+                            <button type="submit" class="btn btn-success btn-lg flex-grow-1">
+                                <i class="fas fa-check-circle"></i> Registrar Vehículo
+                            </button>
+                        </div>
+
+                    </form>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+<style>
+    .form-label {
+        color: #2c3e50;
+        font-size: 0.95rem;
+    }
+    
+    .form-control:focus {
+        border-color: #2ecc71;
+        box-shadow: 0 0 0 0.2rem rgba(46, 204, 113, 0.25);
+    }
+    
+    .btn-success {
+        background-color: #2ecc71;
+        border-color: #2ecc71;
+    }
+    
+    .btn-success:hover {
+        background-color: #27ae60;
+        border-color: #27ae60;
+    }
+</style>
+
+{% endblock %}

@@ -1,0 +1,179 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Editar Perfil - U-Ride{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    
+    <!-- Header -->
+    <div class="mb-5">
+        <h1 class="h2 mb-2">
+            <i class="fas fa-user-edit text-success"></i> Editar Perfil
+        </h1>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-7">
+            
+            <!-- Mensajes -->
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                        <i class="fas fa-check-circle me-2"></i>
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <div class="card shadow">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">Actualiza tu información</h5>
+                </div>
+                <div class="card-body p-5">
+                    
+                    <form method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
+                        {% csrf_token %}
+
+                        <!-- Nombre y Apellido -->
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <label for="first_name" class="form-label fw-semibold">
+                                    <i class="fas fa-user text-success"></i> Nombre
+                                </label>
+                                <input 
+                                    type="text" 
+                                    class="form-control" 
+                                    id="first_name" 
+                                    name="first_name" 
+                                    value="{{ user.first_name }}" 
+                                    required
+                                >
+                            </div>
+                            <div class="col-md-6">
+                                <label for="last_name" class="form-label fw-semibold">
+                                    <i class="fas fa-user text-success"></i> Apellido
+                                </label>
+                                <input 
+                                    type="text" 
+                                    class="form-control" 
+                                    id="last_name" 
+                                    name="last_name" 
+                                    value="{{ user.last_name }}" 
+                                    required
+                                >
+                            </div>
+                        </div>
+
+                        <!-- Carrera -->
+                        <div class="mb-4">
+                            <label for="carrera" class="form-label fw-semibold">
+                                <i class="fas fa-graduation-cap text-success"></i> Carrera
+                            </label>
+                            <input 
+                                type="text" 
+                                class="form-control" 
+                                id="carrera" 
+                                name="carrera" 
+                                placeholder="Ej: Ingeniería en Sistemas"
+                                value="{{ user.carrera|default:'' }}"
+                            >
+                            <small class="form-text text-muted">Opcional</small>
+                        </div>
+
+                        <!-- Contacto y Zona -->
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <label for="numero_contacto" class="form-label fw-semibold">
+                                    <i class="fas fa-phone text-success"></i> Teléfono
+                                </label>
+                                <input 
+                                    type="tel" 
+                                    class="form-control" 
+                                    id="numero_contacto" 
+                                    name="numero_contacto" 
+                                    placeholder="Ej: +593 9999 123456"
+                                    value="{{ user.numero_contacto|default:'' }}"
+                                >
+                            </div>
+                            <div class="col-md-6">
+                                <label for="zona_referencia" class="form-label fw-semibold">
+                                    <i class="fas fa-map-marker-alt text-success"></i> Zona
+                                </label>
+                                <input 
+                                    type="text" 
+                                    class="form-control" 
+                                    id="zona_referencia" 
+                                    name="zona_referencia" 
+                                    placeholder="Ej: Centro, Norte, Sur"
+                                    value="{{ user.zona_referencia|default:'' }}"
+                                >
+                            </div>
+                        </div>
+
+                        <!-- Foto de Perfil -->
+                        <div class="mb-4">
+                            <label for="foto_perfil" class="form-label fw-semibold">
+                                <i class="fas fa-image text-success"></i> Foto de Perfil
+                            </label>
+                            
+                            {% if user.foto_perfil %}
+                                <div class="mb-3">
+                                    <img src="{{ user.foto_perfil.url }}" alt="Foto actual" class="img-thumbnail" style="max-width: 150px;">
+                                </div>
+                            {% endif %}
+                            
+                            <input 
+                                type="file" 
+                                class="form-control" 
+                                id="foto_perfil" 
+                                name="foto_perfil" 
+                                accept="image/*"
+                            >
+                            <small class="form-text text-muted">JPG, PNG. Máximo 5MB</small>
+                        </div>
+
+                        <!-- Botones -->
+                        <div class="d-flex gap-2 mt-5">
+                            <a href="{% url 'users:profile' %}" class="btn btn-outline-secondary btn-lg flex-grow-1">
+                                <i class="fas fa-times"></i> Cancelar
+                            </a>
+                            <button type="submit" class="btn btn-success btn-lg flex-grow-1">
+                                <i class="fas fa-save"></i> Guardar Cambios
+                            </button>
+                        </div>
+
+                    </form>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+<style>
+    .form-label {
+        color: #2c3e50;
+        font-size: 0.95rem;
+    }
+    
+    .form-control:focus {
+        border-color: #2ecc71;
+        box-shadow: 0 0 0 0.2rem rgba(46, 204, 113, 0.25);
+    }
+    
+    .btn-success {
+        background-color: #2ecc71;
+        border-color: #2ecc71;
+    }
+    
+    .btn-success:hover {
+        background-color: #27ae60;
+        border-color: #27ae60;
+    }
+</style>
+
+{% endblock %}

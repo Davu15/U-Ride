@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+
+{% block title %}Solicitudes de Viaje - U-Ride{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-10">
+        <h2 class="mb-4">
+            <i class="fas fa-list"></i> Solicitudes para: {{ viaje.zona_origen }} → {{ viaje.zona_destino }}
+        </h2>
+        
+        <div class="card mb-4">
+            <div class="card-header">
+                <strong>Detalles del Viaje</strong>
+            </div>
+            <div class="card-body">
+                <p class="mb-2">
+                    <i class="fas fa-calendar"></i> <strong>Fecha:</strong> {{ viaje.fecha_hora_salida|date:"d/m/Y H:i" }}
+                </p>
+                <p>
+                    <i class="fas fa-chair"></i> <strong>Cupos:</strong> 
+                    {{ viaje.cupos_disponibles }}/{{ viaje.cupos_totales }} disponibles
+                </p>
+            </div>
+        </div>
+        
+        {% if solicitudes %}
+            {% regroup solicitudes by estado as solicitudes_por_estado %}
+            
+            {% for estado_group in solicitudes_por_estado %}
+                <h5 class="mt-4 mb-3">
+                    {% if estado_group.grouper == 'Pendiente' %}
+                        <i class="fas fa-hourglass-half text-warning"></i>
+                    {% elif estado_group.grouper == 'Confirmada' %}
+                        <i class="fas fa-check-circle text-success"></i>
+                    {% elif estado_group.grouper == 'Rechazada' %}
+                        <i class="fas fa-times-circle text-danger"></i>
+                    {% endif %}
+                    {{ estado_group.grouper }} ({{ estado_group.list|length }})
+                </h5>
+                
+                {% for solicitud in estado_group.list %}
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <div class="row align-items-center">
+                                <div class="col-md-3">
+                                    {% if solicitud.pasajero.foto_perfil %}
+                                        <img src="{{ solicitud.pasajero.foto_perfil.url }}" alt="Foto" class="img-fluid rounded">
+                                    {% else %}
+                                        <div class="bg-light rounded d-flex align-items-center justify-content-center" style="height: 100px;">
+                                            <i class="fas fa-user fa-2x text-muted"></i>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <div class="col-md-6">
+                                    <h6>{{ solicitud.pasajero.get_full_name }}</h6>
+                                    <p class="text-muted mb-1">{{ solicitud.pasajero.correo_institucional }}</p>
+                                    <p class="mb-2">{{ solicitud.pasajero.carrera }}</p>
+                                    <p class="star-rating">
+                                        {% for i in "12345" %}
+                                            {% if i|add:"0" <= solicitud.pasajero.reputacion %}
+                                                <i class="fas fa-star"></i>
+                                            {% else %}
+                                                <i class="far fa-star"></i>
+                                            {% endif %}
+                                        {% endfor %}
+                                        <span class="text-muted ms-2">({{ solicitud.pasajero.reputacion }}/5)</span>
+                                    </p>
+                                </div>
+                                <div class="col-md-3">
+                                    <p class="text-muted text-sm mb-3">
+                                        Solicitado: {{ solicitud.fecha_solicitud|date:"d/m/Y H:i" }}
+                                    </p>
+                                    
+                                    {% if solicitud.estado == 'Pendiente' %}
+                                        <form method="POST" class="d-grid gap-2">
+                                            {% csrf_token %}
+                                            <a href="{% url 'trips:accept_request' solicitud.id %}" class="btn btn-success btn-sm">
+                                                <i class="fas fa-check"></i> Aceptar
+                                            </a>
+                                            <a href="{% url 'trips:reject_request' solicitud.id %}" class="btn btn-danger btn-sm">
+                                                <i class="fas fa-times"></i> Rechazar
+                                            </a>
+                                        </form>
+                                    {% else %}
+                                        <span class="badge bg-{{ solicitud.estado|lower|cut:' '|yesno:'success,danger' }}">
+                                            {{ solicitud.estado }}
+                                        </span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endfor %}
+        {% else %}
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle"></i> No hay solicitudes para este viaje.
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

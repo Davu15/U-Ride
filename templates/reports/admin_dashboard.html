@@ -1,0 +1,155 @@
+{% extends 'base.html' %}
+
+{% block title %}Panel Administrativo - U-Ride{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">
+    <i class="fas fa-tachometer-alt"></i> Panel Administrativo
+</h2>
+
+<!-- Estadísticas -->
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <h3>{{ total_usuarios }}</h3>
+                <p class="text-muted">Usuarios Totales</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <h3>{{ usuarios_verificados }}</h3>
+                <p class="text-muted">Usuarios Verificados</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <h3>{{ viajes_activos }}</h3>
+                <p class="text-muted">Viajes Activos</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center bg-danger text-white">
+            <div class="card-body">
+                <h3>{{ reportes_pendientes }}</h3>
+                <p>Reportes Pendientes</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Secciones de Administración -->
+<div class="row">
+    <!-- Reportes Pendientes -->
+    <div class="col-lg-6 mb-4">
+        <div class="card">
+            <div class="card-header bg-danger text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-exclamation-circle"></i> Reportes Pendientes
+                </h5>
+            </div>
+            <div class="card-body">
+                {% if reportes_pendientes > 0 %}
+                    <a href="#" class="btn btn-danger w-100">
+                        <i class="fas fa-clipboard-list"></i> Ver Reportes ({{ reportes_pendientes }})
+                    </a>
+                {% else %}
+                    <p class="text-muted text-center">No hay reportes pendientes</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <!-- Usuarios con Advertencias -->
+    <div class="col-lg-6 mb-4">
+        <div class="card">
+            <div class="card-header bg-warning text-dark">
+                <h5 class="mb-0">
+                    <i class="fas fa-exclamation-triangle"></i> Usuarios con Advertencias
+                </h5>
+            </div>
+            <div class="card-body">
+                {% if usuarios_con_advertencias %}
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Usuario</th>
+                                <th>Advertencias</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for usuario in usuarios_con_advertencias %}
+                                <tr>
+                                    <td>{{ usuario.get_full_name }}</td>
+                                    <td>
+                                        <span class="badge bg-warning">{{ usuario.advertencias }}</span>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <p class="text-muted text-center">No hay usuarios con advertencias</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <!-- Usuarios Suspendidos -->
+    <div class="col-lg-6 mb-4">
+        <div class="card">
+            <div class="card-header bg-dark text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-ban"></i> Usuarios Suspendidos
+                </h5>
+            </div>
+            <div class="card-body">
+                {% if usuarios_suspendidos %}
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Usuario</th>
+                                <th>Suspendido Hasta</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for usuario in usuarios_suspendidos %}
+                                <tr>
+                                    <td>{{ usuario.get_full_name }}</td>
+                                    <td>{{ usuario.suspendido_hasta|date:"d/m/Y" }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <p class="text-muted text-center">No hay usuarios suspendidos</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <!-- Gestión Rápida -->
+    <div class="col-lg-6 mb-4">
+        <div class="card">
+            <div class="card-header bg-secondary text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-cog"></i> Gestión Rápida
+                </h5>
+            </div>
+            <div class="card-body d-grid gap-2">
+                <a href="{% url 'reports:manage_users' %}" class="btn btn-outline-primary">
+                    <i class="fas fa-users"></i> Gestionar Usuarios
+                </a>
+                <a href="/admin/" class="btn btn-outline-secondary">
+                    <i class="fas fa-sliders-h"></i> Panel Django Admin
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

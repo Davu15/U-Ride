@@ -1,0 +1,133 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ viaje.zona_origen }} → {{ viaje.zona_destino }} - U-Ride{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">
+                    <i class="fas fa-map-marker-alt"></i> 
+                    {{ viaje.zona_origen }} → {{ viaje.zona_destino }}
+                </h4>
+            </div>
+            <div class="card-body">
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <p>
+                            <strong>Fecha y Hora de Salida:</strong><br>
+                            <i class="fas fa-calendar"></i> 
+                            {{ viaje.fecha_hora_salida|date:"d/m/Y" }}<br>
+                            <i class="fas fa-clock"></i> 
+                            {{ viaje.fecha_hora_salida|date:"H:i" }}
+                        </p>
+                    </div>
+                    <div class="col-md-6">
+                        <p>
+                            <strong>Cupos Disponibles:</strong><br>
+                            <span class="badge bg-success">{{ viaje.cupos_disponibles }}/{{ viaje.cupos_totales }}</span>
+                        </p>
+                    </div>
+                </div>
+                
+                <hr>
+                
+                <h5>Información del Conductor</h5>
+                <div class="row align-items-center mb-3">
+                    <div class="col-md-3">
+                        {% if viaje.conductor.foto_perfil %}
+                            <img src="{{ viaje.conductor.foto_perfil.url }}" alt="Foto" class="img-fluid rounded">
+                        {% else %}
+                            <div class="bg-light rounded d-flex align-items-center justify-content-center" style="height: 100px;">
+                                <i class="fas fa-user fa-2x text-muted"></i>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-9">
+                        <h6>{{ viaje.conductor.get_full_name }}</h6>
+                        <p class="text-muted">{{ viaje.conductor.carrera }}</p>
+                        <p class="star-rating">
+                            {% for i in "12345" %}
+                                {% if i|add:"0" <= viaje.conductor.reputacion %}
+                                    <i class="fas fa-star"></i>
+                                {% else %}
+                                    <i class="far fa-star"></i>
+                                {% endif %}
+                            {% endfor %}
+                            <span class="text-muted ms-2">({{ viaje.conductor.reputacion }}/5)</span>
+                        </p>
+                    </div>
+                </div>
+                
+                {% if viaje.vehiculo %}
+                    <hr>
+                    <h5>Información del Vehículo</h5>
+                    <p>
+                        <strong>Marca/Modelo:</strong> {{ viaje.vehiculo.marca }} {{ viaje.vehiculo.modelo }} ({{ viaje.vehiculo.ano }})<br>
+                        <strong>Color:</strong> {{ viaje.vehiculo.color }}<br>
+                        <strong>Placa:</strong> {{ viaje.vehiculo.placa }}<br>
+                        <strong>Capacidad:</strong> {{ viaje.vehiculo.capacidad_asientos }} asientos
+                    </p>
+                {% endif %}
+                
+                {% if viaje.notas_reglas %}
+                    <hr>
+                    <h5>Reglas y Notas del Viaje</h5>
+                    <div class="alert alert-warning">
+                        {{ viaje.notas_reglas }}
+                    </div>
+                {% endif %}
+                
+                <hr>
+                
+                {% if user.is_authenticated and user != viaje.conductor and viaje.cupos_disponibles > 0 %}
+                    <form method="POST" action="{% url 'trips:request_trip' viaje.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-success btn-lg w-100">
+                            <i class="fas fa-check"></i> Solicitar Unirse
+                        </button>
+                    </form>
+                {% elif user.is_authenticated and user == viaje.conductor %}
+                    <a href="{% url 'trips:trip_requests' viaje.id %}" class="btn btn-info btn-lg w-100">
+                        <i class="fas fa-list"></i> Ver Solicitudes
+                    </a>
+                {% elif viaje.cupos_disponibles == 0 %}
+                    <div class="alert alert-danger">
+                        <i class="fas fa-exclamation-triangle"></i> No hay cupos disponibles
+                    </div>
+                {% else %}
+                    <a href="{% url 'users:login' %}" class="btn btn-primary btn-lg w-100">
+                        <i class="fas fa-sign-in-alt"></i> Inicia sesión para solicitar
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-header bg-secondary text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-info-circle"></i> Resumen
+                </h5>
+            </div>
+            <div class="card-body">
+                <p class="mb-2">
+                    <strong>Estado:</strong>
+                    <span class="badge bg-info">{{ viaje.estado }}</span>
+                </p>
+                <p class="mb-2">
+                    <strong>Creado:</strong> {{ viaje.fecha_creacion|date:"d/m/Y H:i" }}
+                </p>
+                
+                <hr>
+                
+                <a href="{% url 'trips:search_trips' %}" class="btn btn-outline-primary w-100">
+                    <i class="fas fa-arrow-left"></i> Volver
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
