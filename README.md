@@ -1,10 +1,10 @@
 # README del Proyecto U-Ride
 
-## 📱 Plataforma de Carpooling Seguro para Estudiantes
+##  Plataforma de Carpooling Seguro para Estudiantes
 
 U-Ride es una plataforma web diseñada para facilitar el transporte compartido seguro entre estudiantes de una misma institución.
 
-## 🚀 Características Principales
+##  Características Principales
 
 ✅ **Autenticación Segura:** Acceso únicamente con correo institucional verificado
 ✅ **Gestión de Viajes:** Publicar, buscar y solicitar viajes
@@ -12,20 +12,20 @@ U-Ride es una plataforma web diseñada para facilitar el transporte compartido s
 ✅ **Seguridad:** Reportes y gestión administrativa de incidentes
 ✅ **Trazabilidad:** Historial completo de eventos del sistema
 
-## 🛠️ Stack Tecnológico
+##  Stack Tecnológico
 
 - **Backend:** Django 5.0
 - **Frontend:** HTML5, CSS3, Bootstrap 5 (CDN)
 - **Base de Datos:** MySQL
 - **Autenticación:** Django Auth + Custom User Model
 
-## 📋 Requisitos Previos
+##  Requisitos Previos
 
 - Python 3.8+
 - MySQL 5.7+
 - pip
 
-## 🔧 Instalación y Configuración
+##  Instalación y Configuración
 
 ### 1. Clonar el Repositorio
 ```bash
@@ -141,7 +141,7 @@ U-Ride/
 └── README.md              # Este archivo
 ```
 
-## 🧪 Modelos de Datos
+##  Modelos de Datos
 
 ### Usuario
 Usuario personalizado con campos adicionales para verificación, reputación y control de suspensiones.
@@ -167,22 +167,16 @@ Trazabilidad completa de eventos del sistema.
 ### ConfiguracionSistema
 Parámetros configurables del sistema (singleton).
 
-## 🔐 Seguridad
+##  Seguridad
 
-- ✅ Contraseñas hasheadas con PBKDF2
-- ✅ Verificación por correo institucional
-- ✅ CSRF protection
-- ✅ SQL Injection prevention (ORM)
-- ✅ Control de acceso basado en roles
+-  Contraseñas hasheadas con PBKDF2
+-  Verificación por correo institucional
+-  CSRF protection
+-  SQL Injection prevention (ORM)
+-  Control de acceso basado en roles
 
-## 📞 Contacto y Soporte
+##  Contacto y Soporte
 
 Para reportar bugs o sugerencias, crear un issue en el repositorio.
-
-## 📄 Licencia
-
-Proyecto educativo. Todos los derechos reservados.
-
----
 
 **Última actualización:** Abril 2026
