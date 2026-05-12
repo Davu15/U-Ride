@@ -73,7 +73,7 @@ python manage.py migrate
 python manage.py createsuperuser
 ```
 
-Email: `admin@estudiantes.ucentral.edu.co`
+Email: `admin@uta.edu.ec`
 Contraseña: (elige una)
 
 ### Paso 9: ¡Ejecutar!

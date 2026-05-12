@@ -65,7 +65,7 @@ DB_PASSWORD=tu_contraseña
 DB_HOST=localhost
 EMAIL_HOST_USER=tu_email@gmail.com
 EMAIL_HOST_PASSWORD=tu_app_password
-INSTITUTIONAL_EMAIL_DOMAIN=estudiantes.ucentral.edu.co
+INSTITUTIONAL_EMAIL_DOMAIN=uta.edu.ec
 ```
 
 ### 6. Aplicar Migraciones

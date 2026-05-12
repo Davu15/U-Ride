@@ -52,7 +52,7 @@ python manage.py createsuperuser
 
 # Se te pedirá que ingreses:
 # - Username (puedes dejarlo en blanco)
-# - Email (usa formato: admin@estudiantes.ucentral.edu.co)
+# - Email (usa formato: admin@uta.edu.ec)
 # - Password
 # - Confirmar Password
 ```
@@ -68,8 +68,8 @@ Usuario = get_user_model()
 # Crear usuario de prueba
 usuario_test = Usuario.objects.create_user(
     username='estudiante1',
-    correo_institucional='estudiante1@estudiantes.ucentral.edu.co',
-    email='estudiante1@estudiantes.ucentral.edu.co',
+    correo_institucional='estudiante1@uta.edu.ec',
+    email='estudiante1@uta.edu.ec',
     password='TestPassword123!',
     first_name='Juan',
     last_name='Pérez',
@@ -168,7 +168,7 @@ DB_PASSWORD=tu_contraseña_correcta
 ### No puedo registrarme
 **Solución:** Verificar que el dominio de email sea correcto
 ```env
-INSTITUTIONAL_EMAIL_DOMAIN=estudiantes.ucentral.edu.co
+INSTITUTIONAL_EMAIL_DOMAIN=uta.edu.ec
 ```
 
 ### Mensajes de email no se envían

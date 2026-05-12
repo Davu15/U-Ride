@@ -32,7 +32,7 @@ class Migration(migrations.Migration):
                 ('is_staff', models.BooleanField(default=False, help_text='Designates whether the user can log into this admin site.', verbose_name='staff status')),
                 ('is_active', models.BooleanField(default=True, help_text='Designates whether this user should be treated as active. Unselect this instead of deleting accounts.', verbose_name='active')),
                 ('date_joined', models.DateTimeField(default=django.utils.timezone.now, verbose_name='date joined')),
-                ('correo_institucional', models.EmailField(help_text='Correo institucional para login (ej: usuario@estudiantes.ucentral.edu.co)', max_length=254, unique=True)),
+                ('correo_institucional', models.EmailField(help_text='Correo institucional para login (ej: usuario@uta.edu.ec)', max_length=254, unique=True)),
                 ('carrera', models.CharField(blank=True, help_text='Carrera o programa académico', max_length=100, null=True)),
                 ('numero_contacto', models.CharField(blank=True, help_text='Número de teléfono o celular', max_length=20, null=True)),
                 ('zona_referencia', models.CharField(blank=True, help_text='Zona o barrio de referencia', max_length=100, null=True)),

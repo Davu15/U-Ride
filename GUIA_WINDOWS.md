@@ -105,7 +105,7 @@ python manage.py createsuperuser
 
 **Te pedirá:**
 - Username: (pulsa Enter para dejar en blanco)
-- Email: `admin@estudiantes.ucentral.edu.co`
+- Email: `admin@uta.edu.ec`
 - Password: (tu contraseña)
 - Confirmar: (repite contraseña)
 
@@ -189,7 +189,7 @@ http://localhost:8000/users/login/
 
 ### Panel de Admin Django
 http://localhost:8000/admin/
-- Email: admin@estudiantes.ucentral.edu.co
+- Email: admin@uta.edu.ec
 - Password: (la que ingresaste)
 
 ---
