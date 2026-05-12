@@ -1,9 +1,14 @@
-# README del Proyecto U-Ride
+# 🚗 U-Ride - Plataforma de Carpooling Seguro para Estudiantes
 
+<<<<<<< HEAD
 ##  Plataforma de Carpooling Seguro para Estudiantes
+=======
+U-Ride es una plataforma web diseñada para facilitar el transporte compartido seguro entre estudiantes de una misma institución, priorizando la verificación institucional y el comportamiento responsable.
+>>>>>>> 5dab252 (Reorganizacion .md)
 
-U-Ride es una plataforma web diseñada para facilitar el transporte compartido seguro entre estudiantes de una misma institución.
+## ✨ Características Principales
 
+<<<<<<< HEAD
 ##  Características Principales
 
 ✅ **Autenticación Segura:** Acceso únicamente con correo institucional verificado
@@ -11,13 +16,23 @@ U-Ride es una plataforma web diseñada para facilitar el transporte compartido s
 ✅ **Sistema de Reputación:** Calificaciones y reseñas entre usuarios
 ✅ **Seguridad:** Reportes y gestión administrativa de incidentes
 ✅ **Trazabilidad:** Historial completo de eventos del sistema
+=======
+- **🔐 Autenticación Segura:** Solo con correo institucional verificado por código de 6 dígitos
+- **🗺️ Gestión de Viajes:** Publicar, buscar y solicitar viajes con filtros avanzados
+- **⭐ Sistema de Reputación:** Calificaciones y reseñas entre usuarios
+- **📋 Reportes:** Sistema de reportes y gestión administrativa de incidentes
+- **📊 Trazabilidad:** Historial completo de eventos del sistema
+- **🛡️ Privacidad:** Ubicaciones por zonas (no coordenadas exactas)
+>>>>>>> 5dab252 (Reorganizacion .md)
 
 ##  Stack Tecnológico
 
-- **Backend:** Django 5.0
+- **Backend:** Django 5.0 (Python)
 - **Frontend:** HTML5, CSS3, Bootstrap 5 (CDN)
-- **Base de Datos:** MySQL
+- **Base de Datos:** MySQL 8.0
+- **ORM:** Django ORM
 - **Autenticación:** Django Auth + Custom User Model
+- **Admin:** Django Admin personalizado
 
 ##  Requisitos Previos
 
@@ -25,65 +40,56 @@ U-Ride es una plataforma web diseñada para facilitar el transporte compartido s
 - MySQL 5.7+
 - pip
 
+<<<<<<< HEAD
 ##  Instalación y Configuración
+=======
+## 🚀 Instalación Rápida
+>>>>>>> 5dab252 (Reorganizacion .md)
 
-### 1. Clonar el Repositorio
+### Opción 1: Automática (Windows - RECOMENDADO)
 ```bash
-git clone <tu-repositorio>
-cd U-Ride
+# Solo ejecuta el script:
+setup_windows.bat
 ```
 
-### 2. Crear Entorno Virtual
+### Opción 2: Manual (Todos los OS)
+
 ```bash
-# Windows
+# 1. Crear entorno virtual
 python -m venv venv
+
+# Windows
 venv\Scripts\activate
 
 # Linux/Mac
-python3 -m venv venv
 source venv/bin/activate
-```
 
-### 3. Instalar Dependencias
-```bash
+# 2. Instalar dependencias
 pip install -r requirements.txt
-```
 
-### 4. Configurar Base de Datos MySQL
-```sql
+# 3. Crear base de datos MySQL
+# En MySQL Workbench o console:
 CREATE DATABASE u_ride_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-```
 
-### 5. Configurar Variablesd de Entorno
-Crear archivo `.env` en la raíz del proyecto:
-```env
-SECRET_KEY=tu-clave-secreta-aqui
-DEBUG=True
-DB_NAME=u_ride_db
-DB_USER=root
-DB_PASSWORD=tu_contraseña
-DB_HOST=localhost
-EMAIL_HOST_USER=tu_email@gmail.com
-EMAIL_HOST_PASSWORD=tu_app_password
-INSTITUTIONAL_EMAIL_DOMAIN=uta.edu.ec
-```
+# 4. Configurar variables de entorno
+# Copiar .env.example a .env y editar con tus valores:
+# - DB_PASSWORD: tu contraseña de MySQL
+# - SECRET_KEY: clave segura
+# - EMAIL_HOST_USER y EMAIL_HOST_PASSWORD: para verificación
+# - INSTITUTIONAL_EMAIL_DOMAIN: dominio de correo (ej: uta.edu.ec)
 
-### 6. Aplicar Migraciones
-```bash
+# 5. Aplicar migraciones
 python manage.py makemigrations
 python manage.py migrate
-```
 
-### 7. Crear Superusuario
-```bash
+# 6. Crear superusuario (administrador)
 python manage.py createsuperuser
-```
 
-### 8. Ejecutar Servidor de Desarrollo
-```bash
+# 7. Ejecutar servidor de desarrollo
 python manage.py runserver
 ```
 
+<<<<<<< HEAD
 Acceder a: `http://localhost:8000`
 
 ## 📁 Estructura del Proyecto
@@ -180,3 +186,101 @@ Parámetros configurables del sistema (singleton).
 Para reportar bugs o sugerencias, crear un issue en el repositorio.
 
 **Última actualización:** Abril 2026
+=======
+**Acceso:**
+- 🌐 Web: `http://localhost:8000`
+- 👤 Admin: `http://localhost:8000/admin/`
+- 📝 Registro: `http://localhost:8000/users/register/`
+
+---
+
+### Para WINDOWS: Usa [Docs/COMIENZA_AQUI_WINDOWS.md](Docs/COMIENZA_AQUI_WINDOWS.md)
+Contiene soluciones para problemas comunes en Windows y guía detallada paso a paso.
+
+##  Estructura del Proyecto
+
+### 📁 Aplicaciones Django
+- **users:** Autenticación, perfiles, vehículos
+- **trips:** Publicación y búsqueda de viajes
+- **ratings:** Calificaciones y reputación
+- **reports:** Reportes y panel administrativo
+
+### 🗄️ Modelos de Base de Datos
+
+| Modelo | Descripción |
+|--------|-------------|
+| **Usuario** | Custom user con verificación, reputación, advertencias |
+| **Vehículo** | Registro de vehículos de conductores |
+| **Viaje** | Viajes publicados con cupos y estado |
+| **SolicitudViaje** | Solicitudes de pasajeros a viajes |
+| **Calificación** | Sistema de 5 estrellas entre usuarios |
+| **Reporte** | Reportes de conducta indebida |
+| **HistorialEventos** | Registro de trazabilidad |
+| **ConfiguracionSistema** | Parámetros configurables |
+
+## 📋 Funcionalidades Implementadas
+
+✅ **Autenticación (RF1):** Registro y login con correo institucional + verificación por código  
+✅ **Gestión de Perfil (RF2):** CRUD de datos personales y registro de vehículos  
+✅ **Publicación de Viajes (RF3):** Formulario con origen, destino, fecha, cupos  
+✅ **Búsqueda de Viajes (RF4):** Filtros por zona, fecha, hora  
+✅ **Gestión de Solicitudes (RF5-RF6):** Aceptar/rechazar pasajeros  
+✅ **Calificaciones (RF8):** Sistema de reseñas y calificación  
+✅ **Reportes (RF11):** Reporte de conducta indebida  
+✅ **Panel Admin:** Dashboard, gestión de usuarios y advertencias  
+✅ **Seguridad:** Contraseñas hasheadas, CSRF protection, SQL injection prevention
+
+## 🔒 Medidas de Seguridad
+
+- ✅ Contraseñas hasheadas con PBKDF2
+- ✅ Verificación por correo institucional (código de 6 dígitos)
+- ✅ CSRF protection
+- ✅ SQL Injection prevention (ORM)
+- ✅ Control de acceso basado en roles
+- ✅ Trazabilidad completa de eventos
+
+## 📚 Documentación Adicional
+
+- **[Docs/COMIENZA_AQUI_WINDOWS.md](Docs/COMIENZA_AQUI_WINDOWS.md)** - Guía detallada para Windows (instalación automática y manual)
+- **[Docs/VERIFICACION_CORREO.md](Docs/VERIFICACION_CORREO.md)** - Documentación del sistema de verificación de correo institucional
+
+## 📊 Estadísticas del Proyecto
+
+- ✅ **24** archivos Python
+- ✅ **16** templates HTML con Bootstrap 5
+- ✅ **8** modelos de base de datos
+- ✅ **20+** vistas implementadas
+- ✅ **4,500+** líneas de código
+
+## 👥 Roles del Sistema
+
+1. **Estudiante (Pasajero):** Busca viajes, solicita unirse, califica conductores
+2. **Estudiante (Conductor):** Publica viajes, acepta/rechaza pasajeros, califica
+3. **Administrador:** Gestiona reportes, advertencias y suspensiones
+
+## 🔗 URLs Principales
+
+```
+/                              # Página principal
+/users/register/               # Registro de usuario
+/users/login/                  # Login
+/users/profile/                # Perfil del usuario
+/trips/search/                 # Búsqueda de viajes
+/trips/publish/                # Publicar viaje
+/trips/my-trips/               # Mis viajes
+/ratings/rate/                 # Calificar usuario
+/reports/report-user/          # Reportar usuario
+/admin/                        # Panel administrativo
+```
+
+## 📧 Verificación de Correo
+
+El sistema usa un código de 6 dígitos único para verificar que el usuario pertenece a la institución.  
+Más detalles en [Docs/VERIFICACION_CORREO.md](Docs/VERIFICACION_CORREO.md)
+
+## 🤝 Soporte
+
+Para reportar bugs o sugerencias, crear un issue en el repositorio.
+
+**Última actualización:** Mayo 2026
+>>>>>>> 5dab252 (Reorganizacion .md)
